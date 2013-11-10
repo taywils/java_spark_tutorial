@@ -5,7 +5,6 @@ import spark.Response;
 import spark.Route;
 
 import java.util.ArrayDeque;
-import java.util.Collections;
 import java.util.Deque;
 
 public class HelloSpark {
@@ -30,7 +29,7 @@ public class HelloSpark {
                             .append("<br/>")
                             .append(article.getCreatedAt())
                             .append("<br/>")
-                            .append("Summary: ").append(article.getSummary())
+                            .append("Summary: ").append(article.getSummaryLink())
                             .append("<br/>")
                             .append(article.getEditLink()).append(" | ").append(article.getDeleteLink())
                             .append("</p>");
@@ -93,6 +92,55 @@ public class HelloSpark {
                     }
                 }
                 return html.toString();
+            }
+        });
+
+        get(new Route("/article/update/:id") {
+            @Override
+            public Object handle(Request request, Response response) {
+                Integer id = Integer.parseInt(request.params(":id"));
+                StringBuilder form = new StringBuilder();
+
+                for(Article article : HelloSpark.articles) {
+                    if(id.equals(article.getId())) {
+                        form.append("<form id='article-create-form' method='POST' action='/article/update/:id'>")
+                            .append("Title: <input type='text' name='article-title' value='").append(article.getTitle()).append("' />")
+                            .append("<br/>")
+                            .append("Summary: <input type='text' name='article-summary' value='").append(article.getSummary()).append("' />")
+                            .append("<input type='hidden' name='article-id' value='").append(article.getId().toString()).append("' />")
+                            .append("<br/>")
+                            .append("</form>")
+                            .append("<textarea name='article-content' rows='4' cols='50' form='article-create-form'>").append(article.getContent())
+                            .append("</textarea>")
+                            .append("<br/>")
+                            .append("<input type='submit' value='Update' form='article-create-form' />");
+                        break;
+                    }
+                }
+
+                return form.toString();
+            }
+        });
+
+        post(new Route("/article/update/:id") {
+            @Override
+            public Object handle(Request request, Response response) {
+                String title    = request.queryParams("article-title");
+                String summary  = request.queryParams("article-summary");
+                String content  = request.queryParams("article-content");
+                Integer id      = Integer.parseInt(request.queryParams("article-id"));
+
+                for(Article article : HelloSpark.articles) {
+                    if(id.equals(article.getId())) {
+                        article.setTitle(title);
+                        article.setContent(content);
+                        article.setSummary(summary);
+                    }
+                }
+
+                response.status(200);
+                response.redirect("/");
+                return "";
             }
         });
     }

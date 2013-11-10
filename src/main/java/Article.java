@@ -28,7 +28,19 @@ public class Article {
     }
 
     public String getSummary() {
-        return "<a href='/article/read/" + this.id + "'>" + this.summary + "</a>";
+        return summary;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    public void setSummary(String summary) {
+        this.summary = summary;
     }
 
     public Integer getId() {
@@ -54,5 +66,9 @@ public class Article {
 
     public String getDeleteLink() {
         return "<a href='/article/delete/" + this.id + "'>Delete</a>";
+    }
+
+    public String getSummaryLink() {
+        return "<a href='/article/read/" + this.id + "'>" + this.summary + "</a>";
     }
 }
