@@ -31,12 +31,16 @@ public class Article {
         return "<a href='/article/read/" + this.id + "'>" + this.summary + "</a>";
     }
 
+    public Integer getId() {
+        return id;
+    }
+
     public void delete() {
         this.deleted = true;
     }
 
     public Boolean readable() {
-        return this.deleted;
+        return !this.deleted;
     }
 
     public String getCreatedAt() {

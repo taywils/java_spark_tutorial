@@ -5,6 +5,7 @@ import spark.Response;
 import spark.Route;
 
 import java.util.ArrayDeque;
+import java.util.Collections;
 import java.util.Deque;
 
 public class HelloSpark {
@@ -73,6 +74,25 @@ public class HelloSpark {
                 response.status(201);
                 response.redirect("/");
                 return "";
+            }
+        });
+
+        get(new Route("/article/read/:id") {
+            @Override
+            public Object handle(Request request, Response response) {
+                Integer id = Integer.parseInt(request.params(":id"));
+                StringBuilder html = new StringBuilder();
+
+                for(Article article : HelloSpark.articles) {
+                    if(id.equals(article.getId())) {
+                        html.append("<a href='/'>Home</a>").append("<p />")
+                            .append("Title: ").append(article.getTitle()).append("<br />")
+                            .append(article.getCreatedAt())
+                            .append("<p>").append(article.getContent()).append("</p>");
+                        break;
+                    }
+                }
+                return html.toString();
             }
         });
     }
