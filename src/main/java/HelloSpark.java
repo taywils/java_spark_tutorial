@@ -1,38 +1,78 @@
 import static spark.Spark.*;
-import spark.*;
 
-import java.util.ArrayList;
+import spark.Request;
+import spark.Response;
+import spark.Route;
+
+import java.util.ArrayDeque;
+import java.util.Deque;
 
 public class HelloSpark {
-    // Just store POST data within a ArrayList for now
-    public static ArrayList<String> things = new ArrayList<String>();
+    public static Deque<Article> articles = new ArrayDeque<Article>();
 
     public static void main(String[] args) {
-        get(new Route("/list") {
+        get(new Route("/") {
             @Override
             public Object handle(Request request, Response response) {
+                String title = "My Blog";
+                String createArticleLink = "<a href='/article/create'>Write Article</a>";
                 StringBuilder html = new StringBuilder();
 
-                if (HelloSpark.things.isEmpty()) {
-                    html.append("<b>Try adding some things to your list</b>");
+                html.append("<h1>").append(title).append("</h1>").append(createArticleLink);
+                html.append("<hr>");
+
+                if(HelloSpark.articles.isEmpty()) {
+                    html.append("<b>No articles have been posted</b>");
                 } else {
-                    html.append("<ul>");
-                    for (String thing : HelloSpark.things) {
-                        html.append("<li>").append(thing).append("</p>");
+                    for(Article article : HelloSpark.articles) {
+                        html.append("Title: ").append(article.getTitle())
+                            .append("<br/>")
+                            .append(article.getCreatedAt())
+                            .append("<br/>")
+                            .append("Summary: ").append(article.getSummary())
+                            .append("<br/>")
+                            .append(article.getEditLink()).append(" | ").append(article.getDeleteLink())
+                            .append("</p>");
                     }
-                    html.append("</ul>");
                 }
 
                 return html.toString();
             }
         });
 
-        post(new Route("/add/:item") {
+        get(new Route("/article/create") {
             @Override
             public Object handle(Request request, Response response) {
-                HelloSpark.things.add(request.params(":item"));
-                response.status(200);
-                return response;
+                StringBuilder form = new StringBuilder();
+
+                form.append("<form id='article-create-form' method='POST' action='/article/create'>")
+                        .append("Title: <input type='text' name='article-title' />")
+                        .append("<br/>")
+                        .append("Summary: <input type='text' name='article-summary' />")
+                        .append("<br/>")
+                    .append("</form>")
+                    .append("<textarea name='article-content' rows='4' cols='50' form='article-create-form'></textarea>")
+                    .append("<br/>")
+                    .append("<input type='submit' value='Publish' form='article-create-form' />");
+
+                return form.toString();
+            }
+        });
+
+        post(new Route("/article/create") {
+            @Override
+            public Object handle(Request request, Response response) {
+                String title = request.queryParams("article-title");
+                String summary = request.queryParams("article-summary");
+                String content = request.queryParams("article-content");
+
+                Article article = new Article(title, summary, content, HelloSpark.articles.size() + 1);
+
+                HelloSpark.articles.addFirst(article);
+
+                response.status(201);
+                response.redirect("/");
+                return "";
             }
         });
     }
