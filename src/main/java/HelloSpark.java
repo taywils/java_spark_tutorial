@@ -25,14 +25,16 @@ public class HelloSpark {
                     html.append("<b>No articles have been posted</b>");
                 } else {
                     for(Article article : HelloSpark.articles) {
-                        html.append("Title: ").append(article.getTitle())
-                            .append("<br/>")
-                            .append(article.getCreatedAt())
-                            .append("<br/>")
-                            .append("Summary: ").append(article.getSummaryLink())
-                            .append("<br/>")
-                            .append(article.getEditLink()).append(" | ").append(article.getDeleteLink())
-                            .append("</p>");
+                        if(article.readable()) {
+                            html.append("Title: ").append(article.getTitle())
+                                .append("<br/>")
+                                .append(article.getCreatedAt())
+                                .append("<br/>")
+                                .append("Summary: ").append(article.getSummaryLink())
+                                .append("<br/>")
+                                .append(article.getEditLink()).append(" | ").append(article.getDeleteLink())
+                                .append("</p>");
+                        }
                     }
                 }
 
@@ -135,6 +137,23 @@ public class HelloSpark {
                         article.setTitle(title);
                         article.setContent(content);
                         article.setSummary(summary);
+                    }
+                }
+
+                response.status(200);
+                response.redirect("/");
+                return "";
+            }
+        });
+
+        get(new Route("/article/delete/:id") {
+            @Override
+            public Object handle(Request request, Response response) {
+                Integer id = Integer.parseInt(request.params(":id"));
+
+                for(Article article : HelloSpark.articles) {
+                    if(id.equals(article.getId())) {
+                        article.delete();
                     }
                 }
 
