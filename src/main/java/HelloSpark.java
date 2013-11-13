@@ -1,11 +1,15 @@
 import static spark.Spark.*;
 
+import spark.ModelAndView;
 import spark.Request;
 import spark.Response;
 import spark.Route;
+import spark.template.freemarker.FreeMarkerRoute;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
+import java.util.HashMap;
+import java.util.Map;
 
 public class HelloSpark {
     public static Deque<Article> articles = new ArrayDeque<Article>();
@@ -160,6 +164,21 @@ public class HelloSpark {
                 response.status(200);
                 response.redirect("/");
                 return "";
+            }
+        });
+
+        get(new FreeMarkerRoute("/freemarker") {
+            @Override
+            public ModelAndView handle(Request request, Response response) {
+                Map<String, Object> attributes = new HashMap<String, Object>();
+                attributes.put("blogTitle", "Spark Blog!");
+                attributes.put("descriptionTitle", "We're using Twitter Bootstrap 3");
+                attributes.put("descriptionBody1", "Special thanks to Twitter for being so dang awesome and helping us");
+                attributes.put("descriptionBody2", "No seriously... the web would be so ugly without Bootstrap");
+
+                // The layout.ftl file is located in directory:
+                // src/test/resources/spark/template/freemarker
+                return modelAndView(attributes, "layout.ftl");
             }
         });
     }
