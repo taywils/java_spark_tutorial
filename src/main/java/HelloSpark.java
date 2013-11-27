@@ -31,26 +31,20 @@ public class HelloSpark {
                     viewObjects.put("articles", showArticles);
                 }
 
+                viewObjects.put("templateName", "articleList.ftl");
+
                 return modelAndView(viewObjects, "layout.ftl");
             }
         });
 
-        get(new Route("/article/create") {
+        get(new FreeMarkerRoute("/article/create") {
             @Override
             public Object handle(Request request, Response response) {
-                StringBuilder form = new StringBuilder();
+                Map<String, Object> viewObjects = new HashMap<String, Object>();
 
-                form.append("<form id='article-create-form' method='POST' action='/article/create'>")
-                        .append("Title: <input type='text' name='article-title' />")
-                        .append("<br/>")
-                        .append("Summary: <input type='text' name='article-summary' />")
-                        .append("<br/>")
-                    .append("</form>")
-                    .append("<textarea name='article-content' rows='4' cols='50' form='article-create-form'></textarea>")
-                    .append("<br/>")
-                    .append("<input type='submit' value='Publish' form='article-create-form' />");
+                viewObjects.put("templateName", "articleForm.ftl");
 
-                return form.toString();
+                return modelAndView(viewObjects, "layout.ftl");
             }
         });
 

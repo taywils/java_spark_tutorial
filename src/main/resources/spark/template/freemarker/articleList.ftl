@@ -3,14 +3,15 @@
         <h1>${hasNoArticles}</h1>
     </div>
 <#else>
-    <#list articles as article>
-        Title: ${article.getTitle()}
-        <br />
-        ${article.getCreatedAt()}
-        <br />
-        Summary: ${article.getSummaryLink()}
-        <br />
-        ${article.getEditLink()} | ${article.getDeleteLink()}
-        <p></p>
-    </#list>
+    <div class="starter-template">
+        <#list articles as article>
+            <h3>${article.getTitle()}</h3>
+            <br />
+            ${article.getCreatedAt()}
+            <br />
+            ${article.getSummaryLink()}
+            <br />
+            ${article.getEditLink()} | ${article.getDeleteLink()}
+        </#list>
+    </div>
 </#if>
