@@ -6,43 +6,32 @@ import spark.Response;
 import spark.Route;
 import spark.template.freemarker.FreeMarkerRoute;
 
-import java.util.ArrayDeque;
-import java.util.Deque;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class HelloSpark {
     public static Deque<Article> articles = new ArrayDeque<Article>();
 
     public static void main(String[] args) {
-        get(new Route("/") {
+        get(new FreeMarkerRoute("/") {
             @Override
-            public Object handle(Request request, Response response) {
-                String title = "My Blog";
-                String createArticleLink = "<a href='/article/create'>Write Article</a>";
-                StringBuilder html = new StringBuilder();
-
-                html.append("<h1>").append(title).append("</h1>").append(createArticleLink);
-                html.append("<hr>");
+            public ModelAndView handle(Request request, Response response) {
+                Map<String, Object> viewObjects = new HashMap<String, Object>();
 
                 if(HelloSpark.articles.isEmpty()) {
-                    html.append("<b>No articles have been posted</b>");
+                    viewObjects.put("hasNoArticles", "Welcome, please click \"Write Article\" to begin.");
                 } else {
+                    ArrayList<Article> showArticles = new ArrayList<Article>();
+
                     for(Article article : HelloSpark.articles) {
                         if(article.readable()) {
-                            html.append("Title: ").append(article.getTitle())
-                                .append("<br/>")
-                                .append(article.getCreatedAt())
-                                .append("<br/>")
-                                .append("Summary: ").append(article.getSummaryLink())
-                                .append("<br/>")
-                                .append(article.getEditLink()).append(" | ").append(article.getDeleteLink())
-                                .append("</p>");
+                            showArticles.add(article);
                         }
                     }
+
+                    viewObjects.put("articles", showArticles);
                 }
 
-                return html.toString();
+                return modelAndView(viewObjects, "layout.ftl");
             }
         });
 
@@ -164,21 +153,6 @@ public class HelloSpark {
                 response.status(200);
                 response.redirect("/");
                 return "";
-            }
-        });
-
-        get(new FreeMarkerRoute("/freemarker") {
-            @Override
-            public ModelAndView handle(Request request, Response response) {
-                Map<String, Object> attributes = new HashMap<String, Object>();
-                attributes.put("blogTitle", "Spark Blog!");
-                attributes.put("descriptionTitle", "We're using Twitter Bootstrap 3");
-                attributes.put("descriptionBody1", "Special thanks to Twitter for being so dang awesome and helping us");
-                attributes.put("descriptionBody2", "No seriously... the web would be so ugly without Bootstrap");
-
-                // The layout.ftl file is located in directory:
-                // src/test/resources/spark/template/freemarker
-                return modelAndView(attributes, "layout.ftl");
             }
         });
     }
