@@ -16,18 +16,18 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <a class="navbar-brand" href="/">My Blog</a>
+                    <a class="navbar-brand" href="/"><span class="glyphicon glyphicon-home"></span> My Blog</a>
                 </div>
                 <div class="collapse navbar-collapse">
                     <ul class="nav navbar-nav">
-                        <li class="active"><a href="/article/create">Write Article</a></li>
+                        <li class="active"><a href="/article/create"><span class="glyphicon glyphicon-pencil"> WriteArticle</a></li>
                     </ul>
                 </div>
             </div>
         </div>
 
         <div class="container">
-            <#include "articleList.ftl">
+            <#include "${templateName}">
         </div>
 
         <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
