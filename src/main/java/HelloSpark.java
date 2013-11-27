@@ -65,49 +65,41 @@ public class HelloSpark {
             }
         });
 
-        get(new Route("/article/read/:id") {
+        get(new FreeMarkerRoute("/article/read/:id") {
             @Override
             public Object handle(Request request, Response response) {
                 Integer id = Integer.parseInt(request.params(":id"));
-                StringBuilder html = new StringBuilder();
+                Map<String, Object> viewObjects = new HashMap<String, Object>();
+
+                viewObjects.put("templateName", "articleRead.ftl");
 
                 for(Article article : HelloSpark.articles) {
                     if(id.equals(article.getId())) {
-                        html.append("<a href='/'>Home</a>").append("<p />")
-                            .append("Title: ").append(article.getTitle()).append("<br />")
-                            .append(article.getCreatedAt())
-                            .append("<p>").append(article.getContent()).append("</p>");
+                        viewObjects.put("article", article);
                         break;
                     }
                 }
-                return html.toString();
+
+                return modelAndView(viewObjects, "layout.ftl");
             }
         });
 
-        get(new Route("/article/update/:id") {
+        get(new FreeMarkerRoute("/article/update/:id") {
             @Override
             public Object handle(Request request, Response response) {
                 Integer id = Integer.parseInt(request.params(":id"));
-                StringBuilder form = new StringBuilder();
+                Map<String, Object> viewObjects = new HashMap<String, Object>();
+
+                viewObjects.put("templateName", "articleForm.ftl");
 
                 for(Article article : HelloSpark.articles) {
                     if(id.equals(article.getId())) {
-                        form.append("<form id='article-create-form' method='POST' action='/article/update/:id'>")
-                            .append("Title: <input type='text' name='article-title' value='").append(article.getTitle()).append("' />")
-                            .append("<br/>")
-                            .append("Summary: <input type='text' name='article-summary' value='").append(article.getSummary()).append("' />")
-                            .append("<input type='hidden' name='article-id' value='").append(article.getId().toString()).append("' />")
-                            .append("<br/>")
-                            .append("</form>")
-                            .append("<textarea name='article-content' rows='4' cols='50' form='article-create-form'>").append(article.getContent())
-                            .append("</textarea>")
-                            .append("<br/>")
-                            .append("<input type='submit' value='Update' form='article-create-form' />");
+                        viewObjects.put("article", article);
                         break;
                     }
                 }
 
-                return form.toString();
+                return modelAndView(viewObjects, "layout.ftl");
             }
         });
 
