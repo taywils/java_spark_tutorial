@@ -1,6 +1,6 @@
 <html>
     <head>
-        <title>Freemarker</title>
+        <title>Spark Blog</title>
         <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
         <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap-theme.min.css">
         <link rel="stylesheet" href="http://getbootstrap.com/examples/starter-template/starter-template.css">
