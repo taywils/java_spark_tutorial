@@ -19,6 +19,15 @@ public class Article {
         this.deleted = false;
     }
 
+    public Article(String title, String summary, String content, Integer id, Date createdAt, Boolean deleted) {
+        this.title = title;
+        this.summary = summary;
+        this.content = content;
+        this.createdAt = createdAt;
+        this.id = id;
+        this.deleted = deleted;
+    }
+
     public String getTitle() {
         return title;
     }
