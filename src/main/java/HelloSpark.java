@@ -9,7 +9,7 @@ import spark.template.freemarker.FreeMarkerRoute;
 import java.util.*;
 
 public class HelloSpark {
-    public static ArticleDbService<Article> articleDbService = new ArticlePostgresDao<Article>();
+    public static ArticleDbService<Article> articleDbService = new ArticleServletDao<Article>();
 
     public static void main(String[] args) {
         get(new FreeMarkerRoute("/") {
