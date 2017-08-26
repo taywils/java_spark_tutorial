@@ -1,7 +1,7 @@
 Spark MVC Tutorial
 ===================
 
-See the entire walkthrough on my [blog](http://taywils.me/2013/11/05/javasparkframeworktutorial.html)
+See the entire walkthrough on my [Java Spark Framework Tutorial | Taywils.me](http://taywils.me/2013/11/05/javasparkframeworktutorial/)
 
 ## Instructions
 
